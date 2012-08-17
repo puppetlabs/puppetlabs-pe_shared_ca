@@ -1,4 +1,4 @@
-Module: shared_ca
+Module: pe_shared_ca
 =================
 
 Module to aid in the creation of a shared CA Puppet Infrastructure
@@ -16,20 +16,28 @@ In order to satisfy these goals, the CA living on the console host will be repli
 
 ActiveMQ and MCollective will participate in a similar fashion but Puppet and the `pe_mcollective` module will handle certificate management here. Because we want the broker mesh to be automatically managed by Puppet, we'll be using a slightly modified `pe_mcollective` module than what ships with PE. It includes code to manage the brokers, functionality intended for a future release.
 
-The `shared_ca` module aids in some of these tasks, mostly file copies & deletions.
+The `pe_shared_ca` module aids in some of these tasks, mostly file copies & deletions.
 
 
 Pre-Requisites
 --------------
 
-1. Install PE 2.5 onto a host with the master, agent & console roles selected (you'll get CA for free). Referred to as the shared CA host.
-1. Install PE 2.5 on any number of hosts with just the master & agent roles (no console). Referred to as Master hosts.
-1. Populate some content for the `shared_ca` module.
-  Copy the following data from the console host into this modules files directory:
-    -  /etc/puppetlabs/puppet/ssl/ca -- CA Directory
-    -  /etc/puppetlabs/mcollective/credentials -- MCollective Credentials
+1. Install PE 2.5 onto a host with the console, master, & agent roles selected (you'll get CA certs for free). Referred to as the "shared CA server" host.
+1. Install PE 2.5 on any number of hosts with just the master & agent roles (no console). Referred to as Master hosts (non-shared-ca servers)
+1. Copy the following data from the shared CA server into this modules' specified directories if it is not already done:
+    - CA directory: `/etc/puppetlabs/puppet/ssl/ca/` to `$module_name/files/ca/`
+    - MCollective Credentials file: `/etc/puppetlabs/mcollective/credentials` to `$module_name/files/credentials`
+    - MC server certs:
+        - `/etc/puppetlabs/puppet/ssl/certs/pe-internal-mcollective-servers.pem` to `$module_name/files/pe-internal/certs`
+        - `/etc/puppetlabs/puppet/ssl/private_keys/pe-internal-mcollective-servers.pem` `$module_name/files/pe-internal/private_keys`
+        - `/etc/puppetlabs/puppet/ssl/public_keys/pe-internal-mcollective-servers.pem` `$module_name/files/pe-internal/public_keys`
+    - `peadmin` user certs:
+        - `/etc/puppetlabs/puppet/ssl/certs/pe-internal-peadmin-mcollective-client.pem` `$module_name/files/pe-internal/certs`
+        - `/etc/puppetlabs/puppet/ssl/private_keys/pe-internal-peadmin-mcollective-client.pem` `$module_name/files/pe-internal/private_keys`
+        - `/etc/puppetlabs/puppet/ssl/public_keys/pe-internal-peadmin-mcollective-client.pem` `$module_name/files/pe-internal/public_keys`
+    - Console Live Management public key: `/etc/puppetlabs/puppet/ssl/public_keys/pe-internal-puppet-console-mcollective-client.pem` `$module_name/files/pe-internal/public_keys`
 1. You'll also need to use a modified `pe_mcollective` module until a compatible version makes it way into a PE 2.5.x release.
-    -   `pe_mcollective` -- Module that handles ActiveMQ & MCollective
+    - `pe_mcollective` -- Module that handles ActiveMQ & MCollective (source is the [private repo branch](https://github.com/ody/puppetlabs-pe_mcollective/tree/ticket/master/xxxx_puppetca_support))
 1. If you want master hosts to send inventory data back to the shared CA (console) host, you'll need to modify `/etc/puppetlabs/puppet/auth.conf` on the shared CA host and add an entry for each master machine to the following section of that file.
 
 ```
