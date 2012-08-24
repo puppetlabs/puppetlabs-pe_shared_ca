@@ -100,7 +100,7 @@ class pe_shared_ca(
     file { 'replace_internal_public_keys':
       ensure  => directory,
       path    => '/etc/puppetlabs/puppet/ssl/public_keys',
-      source  => "${internal_folder_source}/private_keys",
+      source  => "${internal_folder_source}/public_keys",
       recurse => true,
       owner   => 'pe-puppet',
       group   => 'pe-puppet',
