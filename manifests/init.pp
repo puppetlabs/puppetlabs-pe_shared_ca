@@ -84,7 +84,7 @@ class pe_shared_ca(
     file { 'replace_internal_certs':
       ensure  => directory,
       path    => '/etc/puppetlabs/puppet/ssl/certs',
-      source  => "${internal_folder_source}/private_keys",
+      source  => "${internal_folder_source}/certs",
       recurse => true,
       owner   => 'pe-puppet',
       group   => 'pe-puppet',
