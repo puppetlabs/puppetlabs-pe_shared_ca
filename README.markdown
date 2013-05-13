@@ -1,6 +1,8 @@
 Module: pe_shared_ca
 =================
 
+# THIS DOCUMENTATION IS OUT OF DATE -- So someone needs to update it
+
 Module to aid in the creation of a shared CA Puppet Infrastructure
 
 Goal or Use Case
