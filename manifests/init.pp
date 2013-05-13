@@ -48,7 +48,7 @@ class pe_shared_ca (
       recurse => true,
       purge   => true,
       force   => true,
-      require => File[$files_to_purge],
+      require => File[$ca_files_to_purge, $mco_files_to_purge],
     }
     if $manage_puppet_conf {
       ini_setting { 'master ca setting':
